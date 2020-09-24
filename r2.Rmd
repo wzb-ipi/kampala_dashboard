@@ -1,0 +1,44 @@
+---
+title: "KCCA R2 Dashboard"
+output:
+  rmdformats::html_clean
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dashdash)
+library(readxl)
+library(dplyr)
+library(haven)
+```
+
+```{r process}
+
+#Import my_data
+my_data <-  readstata13::read.dta13("C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/data_round2/COVID_wave2_pilot_WIDE_shared.dta") %>%
+  rename(date=today, id=caseid)
+
+#Import my_vars
+my_vars <- read_excel("C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/dash_2/my_vars_uga2.xlsx")
+
+#Process
+vars_used  <- my_vars %>% filter(!is.na(variable)) %>% pull(variable)
+
+my_data <- select(my_data, c("id", "date", all_of(vars_used)))
+
+my_args <- read_excel("C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/dash_2/kcca_r2_args.xlsx")
+
+
+```
+
+
+```{r, message = FALSE, warning = FALSE, include = FALSE}
+wd <- getwd()
+dashdash::dashdash(
+  output_file = paste0(wd, "/surveys/r2.html"),
+  my_data = my_data,
+  my_vars = my_vars,
+  my_args = my_args)
+```
+
+<embed type="text/html" src="surveys/r2.html" width="800" height="800">

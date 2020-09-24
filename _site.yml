@@ -1,0 +1,12 @@
+name: "my-website"
+navbar:
+  title: "COVID-19 in Kampala, Uganda"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Round 1"
+      href: round_1.html
+    - text: "Round 2"
+      href: round_2.html
+ 
+---
