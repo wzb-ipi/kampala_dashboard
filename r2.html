@@ -158,6 +158,9 @@ img {
 <li>
   <a href="round_2.html">Round 2</a>
 </li>
+<li>
+  <a href="do_all.html">Compare rounds</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -182,9 +185,10 @@ img {
 <span id="cb1-8"><a href="#cb1-8"></a><span class="co">#Process</span></span>
 <span id="cb1-9"><a href="#cb1-9"></a>vars_used  &lt;-<span class="st"> </span>my_vars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(variable)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(variable)</span>
 <span id="cb1-10"><a href="#cb1-10"></a></span>
-<span id="cb1-11"><a href="#cb1-11"></a>my_data &lt;-<span class="st"> </span><span class="kw">select</span>(my_data, <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;date&quot;</span>, <span class="kw">all_of</span>(vars_used)))</span>
-<span id="cb1-12"><a href="#cb1-12"></a></span>
-<span id="cb1-13"><a href="#cb1-13"></a>my_args &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/dash_2/kcca_r2_args.xlsx&quot;</span>)</span></code></pre></div>
+<span id="cb1-11"><a href="#cb1-11"></a>my_data &lt;-<span class="st"> </span><span class="kw">select</span>(my_data, <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;date&quot;</span>, <span class="kw">all_of</span>(vars_used))) <span class="op">%&gt;%</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">covid_mainconcern=</span><span class="kw">recode</span>(covid_mainconcern, <span class="st">&quot;Other __________________________&quot;</span>=<span class="st">&quot;Other&quot;</span>))</span>
+<span id="cb1-13"><a href="#cb1-13"></a></span>
+<span id="cb1-14"><a href="#cb1-14"></a>my_args &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/dash_2/kcca_r2_args.xlsx&quot;</span>)</span></code></pre></div>
 <embed type="text/html" src="surveys/r2.html" width="800" height="800">
 </div>
 
