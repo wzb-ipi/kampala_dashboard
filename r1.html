@@ -12,6 +12,7 @@
 
 <title>Make UGA dashboard</title>
 
+<script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
@@ -23,24 +24,24 @@
 <script src="site_libs/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
 <link href="site_libs/clean-0.1/clean.css" rel="stylesheet" />
 <script src="site_libs/clean-0.1/clean.js"></script>
-<script src="site_libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -61,9 +62,9 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-le
 div.sourceCode
   { color: #1f1c1b; background-color: #ffffff; }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span. { color: #1f1c1b; } /* Normal */
+code span { color: #1f1c1b; } /* Normal */
 code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
 code span.an { color: #ca60ca; } /* Annotation */
 code span.at { color: #0057ae; } /* Attribute */
@@ -153,10 +154,13 @@ img {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="round_1.html">Round 1</a>
+  <a href="round_1.html">Round 1 (June- July 2020)</a>
 </li>
 <li>
-  <a href="round_2.html">Round 2</a>
+  <a href="round_2.html">Round 2 (September 2020)</a>
+</li>
+<li>
+  <a href="round_3.html">Round 3 (November- December 2020)</a>
 </li>
 <li>
   <a href="do_all.html">Compare rounds</a>
@@ -177,30 +181,30 @@ img {
 <div id="content">
 <div id="gather-inputs" class="section level1">
 <h1>Gather inputs</h1>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>my_vars &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/my_vars2.xlsx&quot;</span>) </span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a>vars_used  &lt;-<span class="st"> </span>my_vars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(variable)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(variable)</span>
-<span id="cb1-4"><a href="#cb1-4"></a>vars_used  &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;date&quot;</span>, vars_used)</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a>my_data &lt;-<span class="st"> </span>haven<span class="op">::</span><span class="kw">read_stata</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/data/r1r2_editted_merged_0801.dta&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">date=</span>today) <span class="op">%&gt;%</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">id=</span><span class="st">&quot;Kampala&quot;</span>)</span>
-<span id="cb1-9"><a href="#cb1-9"></a></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="co"># Checks</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="cf">if</span>(<span class="op">!</span><span class="kw">all</span>(vars_used <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(my_data))){</span>
-<span id="cb1-12"><a href="#cb1-12"></a>  <span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;Missing variables:&quot;</span>, </span>
-<span id="cb1-13"><a href="#cb1-13"></a>              <span class="kw">paste</span>(vars_used[<span class="op">!</span>(vars_used <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(my_data))], <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>)))</span>
-<span id="cb1-14"><a href="#cb1-14"></a>  vars_used &lt;-<span class="st"> </span>vars_used[(vars_used <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(my_data))]</span>
-<span id="cb1-15"><a href="#cb1-15"></a>  }</span>
-<span id="cb1-16"><a href="#cb1-16"></a></span>
-<span id="cb1-17"><a href="#cb1-17"></a><span class="co"># Light data cleaning</span></span>
-<span id="cb1-18"><a href="#cb1-18"></a>my_data &lt;-<span class="st"> </span><span class="kw">select</span>(my_data, <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="kw">all_of</span>(vars_used)))  <span class="op">%&gt;%</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">date =</span> <span class="kw">as.Date</span>(date)) <span class="op">%&gt;%</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a><span class="st">  </span><span class="kw">filter</span>(date <span class="op">&gt;=</span><span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2020-04-30&quot;</span>))</span>
-<span id="cb1-21"><a href="#cb1-21"></a></span>
-<span id="cb1-22"><a href="#cb1-22"></a>my_vars &lt;-<span class="st"> </span>my_vars <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(variable <span class="op">%in%</span><span class="st"> </span>vars_used) </span>
-<span id="cb1-23"><a href="#cb1-23"></a></span>
-<span id="cb1-24"><a href="#cb1-24"></a>my_args &lt;-<span class="st"> </span><span class="kw">read_excel</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/my_args.xlsx&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>my_vars <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/my_vars2.xlsx&quot;</span>) </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>vars_used  <span class="ot">&lt;-</span> my_vars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(variable)) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(variable)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>vars_used  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;date&quot;</span>, vars_used)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_stata</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/data/r1r2_editted_merged_0801.dta&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date=</span>today) <span class="sc">%&gt;%</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id=</span><span class="st">&quot;Kampala&quot;</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Checks</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">all</span>(vars_used <span class="sc">%in%</span> <span class="fu">names</span>(my_data))){</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;Missing variables:&quot;</span>, </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>              <span class="fu">paste</span>(vars_used[<span class="sc">!</span>(vars_used <span class="sc">%in%</span> <span class="fu">names</span>(my_data))], <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>)))</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  vars_used <span class="ot">&lt;-</span> vars_used[(vars_used <span class="sc">%in%</span> <span class="fu">names</span>(my_data))]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Light data cleaning</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">select</span>(my_data, <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="fu">all_of</span>(vars_used)))  <span class="sc">%&gt;%</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(date)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-04-30&quot;</span>))</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>my_vars <span class="ot">&lt;-</span> my_vars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(variable <span class="sc">%in%</span> vars_used) </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>my_args <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/my_args.xlsx&quot;</span>)</span></code></pre></div>
 <embed type="text/html" src="surveys/r1.html" width="800" height="800">
 </div>
 </div>

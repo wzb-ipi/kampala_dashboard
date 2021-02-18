@@ -10,7 +10,7 @@
 
 
 
-<title>KCCA R2 Dashboard</title>
+<title>KCCA R3 Dashboard</title>
 
 <script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -175,36 +175,26 @@ img {
 
 
 <div id="header">
-<h1 class="title">KCCA R2 Dashboard</h1>
+<h1 class="title">KCCA R3 Dashboard</h1>
 </div>
 
 <div id="content">
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Import my_data</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>my_data <span class="ot">&lt;-</span>  readstata13<span class="sc">::</span><span class="fu">read.dta13</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/data_round2/COVID_wave2_pilot_WIDE_shared.dta&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date=</span>today, <span class="at">id=</span>caseid)</span></code></pre></div>
-<pre><code>## Warning in readstata13::read.dta13(&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/data_round2/COVID_wave2_pilot_WIDE_shared.dta&quot;): 
-##   mask_protect:
-##   Missing factor labels - no labels assigned.
-##   Set option generate.factors=T to generate labels.</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Import my_vars</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>my_vars <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/dash_2/my_vars_uga2.xlsx&quot;</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Process</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>vars_used  <span class="ot">&lt;-</span> my_vars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(variable)) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(variable)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">select</span>(my_data, <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;date&quot;</span>, <span class="fu">all_of</span>(vars_used))) <span class="sc">%&gt;%</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">covid_mainconcern=</span><span class="fu">recode</span>(covid_mainconcern, <span class="st">&quot;Other __________________________&quot;</span><span class="ot">=</span><span class="st">&quot;Other&quot;</span>),</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">mask_protect=</span><span class="fu">as.factor</span>(mask_protect),</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">mask_protect=</span><span class="fu">recode</span>(mask_protect, <span class="st">&quot;1&quot;</span><span class="ot">=</span><span class="st">&quot;Only protects you&quot;</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;2&quot;</span><span class="ot">=</span><span class="st">&quot;Protects you more than others around you&quot;</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;3&quot;</span><span class="ot">=</span> <span class="st">&quot;Protect both you and others around you&quot;</span>,</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;4&quot;</span><span class="ot">=</span><span class="st">&quot;Protects others around you more than&quot;</span>,</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;5&quot;</span><span class="ot">=</span> <span class="st">&quot;Only protects others around you&quot;</span>, </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;6&quot;</span><span class="ot">=</span><span class="st">&quot;Protects neither me nor any one around&quot;</span>,</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                             <span class="st">&quot;777&quot;</span><span class="ot">=</span><span class="st">&quot;Other&quot;</span>))</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>my_args <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/dash_2/kcca_r2_args.xlsx&quot;</span>)</span></code></pre></div>
-<embed type="text/html" src="surveys/r2.html" width="800" height="800">
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>my_data <span class="ot">&lt;-</span>  readstata13<span class="sc">::</span><span class="fu">read.dta13</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/data_round3/20201222_COVID_Wave3-Survey_WIDE_PostHFC.dta&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">date=</span>today,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">id=</span>caseid) <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">person_trust=</span><span class="fu">recode</span>(person_trust, <span class="st">&quot;Friends youâ€™ve made online&quot;</span><span class="ot">=</span><span class="st">&quot;Friends you&#39;ve made online&quot;</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Import my_vars</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>my_vars <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/r3/my_vars3.xlsx&quot;</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Process</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>vars_used  <span class="ot">&lt;-</span> my_vars <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(variable)) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(variable)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">select</span>(my_data, <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;date&quot;</span>, <span class="fu">all_of</span>(vars_used))) </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>my_args <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;C:/Users/solis/Dropbox/WZB/KCCA_C19_dashboard/dash_2/kcca_r2_args.xlsx&quot;</span>)</span></code></pre></div>
+<embed type="text/html" src="surveys/r3.html" width="800" height="800">
 </div>
 
 
