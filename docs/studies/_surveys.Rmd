@@ -1,0 +1,66 @@
+---
+title: Surveys
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+library(DT)
+library(maptools)
+library(gpclib)
+library(rgdal)
+gpclibPermit()
+```
+
+
+```{r, echo = FALSE}
+
+ my_vars <- data.frame(
+   variable = c("market_open", "price_rice", "aware", "water"),
+   family = c("Markets", "Markets", "Actions", "Actions"),
+   short_label = c("Is market open?", "Price of a rice", "Aware of Covid19", "Access to water"),
+   description = c("details on market open", "Price of a cup of rice", "Details on aware of Covid19", "Details on access to water"),
+   stringsAsFactors = FALSE
+ )
+my_data <-
+   expand_grid(id = c("Bo", "Bombali", "Bonthe"), date = as.Date(c("2020-04-18", "2020-04-19", "2020-04-20"))) %>%
+   data.frame(stringsAsFactors = FALSE) %>%
+     mutate(n = 3) %>%
+     uncount(n) %>%
+     dplyr::mutate(
+     market_open	 = rbinom(n(), 1, .5),
+     price_rice	 = rbinom(n(), 1, .5),
+     aware	 = rbinom(n(), 1, .5),
+     water	 = rbinom(n(), 1, .5))
+
+
+
+ my_args <- data.frame(
+   intro_text = "t",
+   data_note = "",
+   map_path = "/Users/lilymedina/Documents/GitHub/dashdash/docs/shapefiles",
+   map_layer = "SLE_adm3",
+   map_region =  "NAME_2",
+   group = "District",
+   scale_vars = TRUE,
+   stringsAsFactors = FALSE
+   )
+
+
+
+
+
+```
+
+```{r}
+dashdash::dashdash(
+  output_file = "/Users/lilymedina/Documents/GitHub/metadash/studies/sl2.html",
+  title = "",
+  my_data = my_data,
+  my_vars = my_vars,
+  my_args = my_args)
+```
+
+
